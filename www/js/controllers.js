@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -9,8 +9,22 @@ angular.module('starter.controllers', [])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
+  // HEROKU
+  $http.get('https://efo-ben-service.herokuapp.com/user').then(function(resp) {
+  $scope.loginData.users = resp.data._items;
+  });
+
   // Form data for the login modal
   $scope.loginData = {};
+  $scope.checkLoginUser = true;
+  $scope.loginData.isChecked = false;
+
+  //console.log($scope.loginData.isChecked + " thats the isChecked");
+  function checkmark() {
+    if ($scope.loginData.isChecked = false) {
+      $('.radio-content input:text').val("");
+    }
+  }
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -53,4 +67,44 @@ angular.module('starter.controllers', [])
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
+})
+
+
+.controller('MapCtrl', function($scope, $state, $cordovaGeolocation, $http) {
+  var options = {timeout: 10000, enableHighAccuracy: true};
+
+  $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+
+    var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+    var mapOptions = {
+      center: latLng,
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+    var marker = new google.maps.Marker({
+    position: latLng,
+    map: $scope.map,
+    title: 'Hello World!'
+    });
+
+    update_location(latLng);
+
+    function update_location(latLng) {
+      var payload = {
+        "geo": {"coordinates": [latLng.lat(), latLng.lng()], "type": "Point"},
+        "time": "2015-07-24T22:00:00.000000Z",
+        "user": "56aa76b0cfc207b71181fce4"
+      };
+      return $http.post('https://efo-ben-service.herokuapp.com/checkin', payload).then(function(resp) {
+        console.log('adslkjfl');
+        console.log(resp)
+      });
+    }
+  }, function(error){
+    console.log("Could not get location");
+  });
 });
