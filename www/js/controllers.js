@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $rootScope, $state) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $rootScope, $state, $interval) {
     window.rs = $rootScope;
     $scope.bob = function(user) {
       $rootScope.user = user;
@@ -20,6 +20,34 @@ angular.module('starter.controllers', [])
   $scope.loginData.users = resp.data._items;
     $rootScope.allUsers = resp.data._items;
   });
+    window.rs = $rootScope;
+
+    function pollUserLocs() {
+      $http.get('https://efo-ben-service.herokuapp.com/checkin').then(function(resp){
+        var checkins, geo, i, len, ref, time, user, userLoc;
+
+        if ($rootScope.userLocs == null) {
+          $rootScope.userLocs = {};
+        }
+
+        userLoc = $rootScope.userLocs;
+
+        checkins = resp.data._items;
+
+        for (i = 0, len = checkins.length; i < len; i++) {
+          ref = checkins[i], geo = ref.geo, time = ref.time, user = ref.user;
+          if ((userLoc.user == null) || userLoc.user.time < time) {
+            userLoc[user] = {
+              geo: geo,
+              time: time,
+              user: user
+            };
+          }
+        }
+      });
+    }
+    $interval(pollUserLocs, 5000);
+
 
   // Form data for the login modal
   $scope.loginData = {};
