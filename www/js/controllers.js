@@ -4,8 +4,8 @@ angular.module('starter.controllers', [])
     window.rs = $rootScope;
     $scope.bob = function(user) {
       $rootScope.user = user;
-      $rootScope.uid = user.id;
-      localStorage.setItem('uid', user.id)
+      $rootScope.uid = user._id;
+      localStorage.setItem('uid', user._id)
     };
 
   // With the new view caching in Ionic, Controllers are only called
@@ -24,29 +24,22 @@ angular.module('starter.controllers', [])
 
     function pollUserLocs() {
       $http.get('https://efo-ben-service.herokuapp.com/checkin').then(function(resp){
-        var checkins, geo, i, len, ref, time, user, userLoc;
+        var cords, loc;
 
-        if ($rootScope.userLocs == null) {
-          $rootScope.userLocs = {};
-        }
-
-        userLoc = $rootScope.userLocs;
-
-        checkins = resp.data._items;
-
-        for (i = 0, len = checkins.length; i < len; i++) {
-          ref = checkins[i], geo = ref.geo, time = ref.time, user = ref.user;
-          if ((userLoc.user == null) || userLoc.user.time < time) {
-            userLoc[user] = {
-              geo: geo,
-              time: time,
-              user: user
-            };
+        cords = (function() {
+          var i, len, ref, results;
+          ref = resp.data._items;
+          results = [];
+          for (i = 0, len = ref.length; i < len; i++) {
+            loc = ref[i];
+            results.push([loc.geo.coordinates[0], loc.geo.coordinates[1]]);
           }
-        }
+          return results;
+        })();
+        window.cords = cords;
       });
     }
-    $interval(pollUserLocs, 5000);
+    $interval(pollUserLocs, 500);
 
 
   // Form data for the login modal
@@ -106,7 +99,7 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('MapCtrl', function($scope, $state, $cordovaGeolocation, $http) {
+.controller('MapCtrl', function($scope, $state, $cordovaGeolocation, $http, $rootScope) {
   var options = {timeout: 10000, enableHighAccuracy: true};
 
   $cordovaGeolocation.getCurrentPosition(options).then(function(position){
@@ -119,25 +112,32 @@ angular.module('starter.controllers', [])
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
-    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    $scope.map =window.mp = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-    var marker = new google.maps.Marker({
-    position: latLng,
-    map: $scope.map,
-    title: 'Hello World!'
-    });
+    var i, j, len, marker;
+
+    for (j = 0, len = window.cords.length; j < len; j++) {
+      i = cords[j];
+      console.log(i);
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(i[0], i[1]),
+        map: mp,
+        title: 'Hello World!'
+      });
+    }
+
+
+
 
     update_location(latLng);
 
     function update_location(latLng) {
       var payload = {
         "geo": {"coordinates": [latLng.lat(), latLng.lng()], "type": "Point"},
-        "time": "2015-07-24T22:00:00.000000Z",
-        "user": "56aa76b0cfc207b71181fce4"
+        "time": moment().format('YYYY-MM-DDTHH:mm:ss'),//"2015-07-24T22:00:00.000000Z",
+        "user": $rootScope.uid
       };
       return $http.post('https://efo-ben-service.herokuapp.com/checkin', payload).then(function(resp) {
-        console.log('adslkjfl');
-        console.log(resp)
       });
     }
   }, function(error){
