@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $rootScope) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $rootScope, $interval) {
     window.rs = $rootScope;
     $scope.bob = function(user) {
       $rootScope.user = user;
@@ -20,7 +20,36 @@ angular.module('starter.controllers', [])
   $scope.loginData.users = resp.data._items;
     $rootScope.allUsers = resp.data._items;
   });
+  //
+  $rootScope.updateUserLocs = function() {
+     return  $http.get('https://efo-ben-service.herokuapp.com/checkin').then(function(resp) {
+        var checkins, geo, i, len, ref, time, user, userLocs;
 
+        if ($rootScope.userLocs == null) {
+          $rootScope.userLocs = {};
+        }
+
+        userLocs = $rootScope.userLocs;
+
+        checkins = resp.data._items;
+
+        for (i = 0, len = checkins.length; i < len; i++) {
+          ref = checkins[i], geo = ref.geo, time = ref.time, user = ref.user;
+          if ((userLocs.user == null) || userLocs.user.time < time) {
+            userLocs[user] = {
+              geo: geo,
+              time: time,
+              user: user
+            };
+          }
+        }
+      })
+    };
+  //
+    //$rootScope.updateUserLocs();
+  $interval($rootScope.updateUserLocs, 5000);
+
+  //
   // Form data for the login modal
   $scope.loginData = {};
   $scope.checkLoginUser = true;
@@ -90,15 +119,12 @@ angular.module('starter.controllers', [])
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
-    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
     var marker = new google.maps.Marker({
     position: latLng,
     map: $scope.map,
     title: 'Hello World!'
     });
-
-    update_location(latLng);
 
     function update_location(latLng) {
       var payload = {
