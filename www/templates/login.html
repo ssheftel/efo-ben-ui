@@ -11,11 +11,12 @@
           <ion-list>
             <ion-radio ng-click="loginData.isChecked = !loginData.isChecked" ng-model="choice"
                        ng-repeat=" user in loginData.users"
+                       ng-change="bob(user)"
                        ng-value="'{{ user.id }}'">{{user.first_name + ' ' + user.last_name}}
             </ion-radio>
           </ion-list>
         <label class="item">
-          <button class="button button-block button-positive" ng-disabled="!loginData.isChecked" type="submit">Log in</button>
+          <button class="button button-block button-positive"  type="submit">Log in</button>
         </label>
       </div>
     </form>

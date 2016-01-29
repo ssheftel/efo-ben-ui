@@ -1,6 +1,12 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $rootScope) {
+    window.rs = $rootScope;
+    $scope.bob = function(user) {
+      $rootScope.user = user;
+      $rootScope.uid = user.id;
+      localStorage.setItem('uid', user.id)
+    };
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -12,6 +18,7 @@ angular.module('starter.controllers', [])
   // HEROKU
   $http.get('https://efo-ben-service.herokuapp.com/user').then(function(resp) {
   $scope.loginData.users = resp.data._items;
+    $rootScope.allUsers = resp.data._items;
   });
 
   // Form data for the login modal
