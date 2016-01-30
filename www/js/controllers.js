@@ -123,7 +123,7 @@ angular.module('starter.controllers', [])
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(i[0], i[1]),
         map: mp,
-        title: 'Hello World!'
+        //title: 'Hello World!'
       });
     }
 
@@ -145,14 +145,14 @@ angular.module('starter.controllers', [])
     }
 
     //console.log(late[0])
-    ////for (j = 0, len = late.length; j < len; j++) {
-    //  for (i = 0, len = $rootScope.allUsers.length; i < len; i++) {
-    //      console.log($rootScope.allUsers[i]._id);
-    //    if (late[j] === $rootScope.allUsers[i]._id) {
-    //      console.log($rootScope.allUsers[i].first_name)
-    //    //}
-    //  }
-    //}
+    //for (j = 0, len = late.length; j < len; j++) {
+      for (i = 0, len = $rootScope.allUsers.length; i < len; i++) {
+          //console.log($rootScope.allUsers[i]._id);
+        if (late[j] === $rootScope.allUsers[i]._id) {
+          console.log($rootScope.allUsers[i].first_name)
+        //}
+      }
+    }
     // END OF DISTANCE CALCULATION
 
 
