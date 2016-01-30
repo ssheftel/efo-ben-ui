@@ -21,11 +21,10 @@ angular.module('starter.controllers', [])
     $rootScope.allUsers = resp.data._items;
   });
     window.rs = $rootScope;
-
     function pollUserLocs() {
       $http.get('https://efo-ben-service.herokuapp.com/checkin').then(function(resp){
         var cords, loc;
-
+        //console.log(resp.data._items)
         cords = (function() {
           var i, len, ref, results;
           ref = resp.data._items;
@@ -34,12 +33,14 @@ angular.module('starter.controllers', [])
             loc = ref[i];
             results.push([loc.geo.coordinates[0], loc.geo.coordinates[1]]);
           }
-          return results;
+
+          return [results,ref];
         })();
         window.cords = cords;
       });
     }
     $interval(pollUserLocs, 500);
+
 
 
   // Form data for the login modal
@@ -116,9 +117,9 @@ angular.module('starter.controllers', [])
 
     var i, j, len, marker;
 
-    for (j = 0, len = window.cords.length; j < len; j++) {
-      i = cords[j];
-      console.log(i);
+    for (j = 0, len = window.cords[0].length; j < len; j++) {
+      i = cords[0][j];
+      //console.log(i);
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(i[0], i[1]),
         map: mp,
@@ -126,6 +127,23 @@ angular.module('starter.controllers', [])
       });
     }
 
+
+    // CALCULATE DISTANCE
+    // var from = Location of ITC
+    var late = [];
+    var from = new google.maps.LatLng(32.061974, 34.770008);
+    for (j = 0, len = window.cords[0].length; j < len; j++) {
+      i = cords[0][j];
+      var to   = new google.maps.LatLng(i[0], i[1]);
+      var dist = google.maps.geometry.spherical.computeDistanceBetween(from, to);
+      if (dist > 130) {
+       late.push(cords[1][j]._id);
+      }
+    //Need to do
+    // IF dist > 130;
+      // late -- print name on app/reporting page
+    }
+    // END OF DISTANCE CALCULATION
 
 
 
