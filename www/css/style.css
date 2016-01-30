@@ -36,5 +36,10 @@
 
 #logo2 {
     width: 100px;
-    margin-left: 40%;
+    margin-left: 42%;
+}
+
+#reportwrapper {
+    position: relative;
+    top: 10%;
 }

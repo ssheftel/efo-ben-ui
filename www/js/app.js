@@ -70,7 +70,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
       views: {
         'menuContent': {
           templateUrl: 'templates/reporting.html',
-          controller: 'ReportingCtrl'
         }
       }
     })
