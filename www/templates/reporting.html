@@ -12,32 +12,21 @@
     </ion-nav-bar>
 
   <ion-content>
-    <div class="list card">
-          <center><h2>In Class</h2></center>
 
-      <div class="item item-body">
-        <h2>Kevin Mardakhayev</h2>
-    <p>
-      <a href="#" class="subdued">103 Likes</a>
-      <a href="#" class="subdued">67 Comments</a><br><br>
-    </p>
-      </div>
-    </div>
-      <br>
     <div class="list card">
-          <center><h2>Not in Class</h2></center>
-
+      <div class="item item-divider">
+          <center><h2 id="cheb">Not in Class</h2></center>
+        </div>
       <div class="item item-body">
-        <h2>Ben Myrha</h2>
-    <p>
-      <a href="#" class="subdued">1 Likes</a>
-      <a href="#" class="subdued">5 Comments</a><br><br>
-    </p>
-       <h2>Joe Shamah</h2>
-    <p>
-      <a href="#" class="subdued">3 Likes</a>
-      <a href="#" class="subdued">4 Comments</a>
-    </p>
+
+        <h2>Ben Myrha
+          <a class="button-stable ion-ios-telephone-outline" ng-href="tel: {{phoneno}}" id="telephone"></a>
+          </h2>
+
+       <h2>Joe Shamah
+         <a class="button-stable ion-ios-telephone-outline" ng-href="tel: {{phoneno}}" id="telephone"></a>
+        </h2>
+
       </div>
     </div>
   </ion-content>

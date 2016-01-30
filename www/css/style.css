@@ -55,7 +55,11 @@
   color: #4d4d4d;
 }
 
-#4 {
-  font-size: 40px;
-  margin-top: 100px;
+#cheb {
+  font-size: 30px;
+}
+
+#telephone {
+  color: #0c60ee;
+  font-size: 30px;
 }
