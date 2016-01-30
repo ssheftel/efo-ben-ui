@@ -6,18 +6,17 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="doLogin()">
+    <form>
       <div class="list">
           <ion-list>
-            <ion-radio ng-click="loginData.isChecked = !loginData.isChecked" ng-model="choice"
+            <ion-radio ng-click="setUser(user)" ng-model="choice"
                        ng-repeat=" user in loginData.users"
-                       ng-change="bob(user)"
                        ng-value="'{{ user.id }}'">{{user.first_name + ' ' + user.last_name}}
             </ion-radio>
           </ion-list>
-        <label class="item">
-          <button class="button button-block button-positive"  type="submit">Log in</button>
-        </label>
+        <!--<label class="item">-->
+          <!--<button class="button button-block button-positive"  type="submit">Log in</button>-->
+        <!--</label>-->
       </div>
     </form>
   </ion-content>

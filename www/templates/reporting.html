@@ -1,16 +1,14 @@
-<ion-view>
-    <div class="bar bar-subheader">
-        <img src="../img/BEN.png" id="logo2">
-      </div>
+<ion-nav-bar></ion-nav-bar>
+<ion-nav-view>
+  <ion-view view-title="Reporting">
+    <ion-content>
+      <ion-list>
+        <ion-item class="item item-avatar" href="#" ng-repeat="user in users" href="#/app/playlists/{{playlist.id}}">
+          <h2>{{user.first_name}} {{user.last_name}}</h2>
+          <p>{{ dist(lat, lng, checkinsByUsers[user._id].cord[0], checkinsByUsers[user._id].cord[1]) || '---'}}</p>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-view>
 
-  <ion-content>
-  <div class="list card" id="reportwrapper">
-  <div class="item item-divider">
-    LATE ITCers!
-  </div>
-  <div class="item item-text-wrap">
-    Benjamin PK Myrha <br><br>
-    Joe Shamah
-  </div>
-  </ion-content>
-</ion-view>
+</ion-nav-view>
