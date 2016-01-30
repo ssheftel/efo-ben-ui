@@ -63,3 +63,7 @@
   color: #0c60ee;
   font-size: 30px;
 }
+
+.alignright {
+	float: right;
+}
